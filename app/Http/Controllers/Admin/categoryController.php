@@ -54,7 +54,7 @@ class categoryController extends Controller
         // melakukan Validasi
         $this->validate($request, [
             'name' => 'required|max:255',
-            'image' => 'required|image|mimes: jpeg,png,jpg|max:50048'
+            'image' => 'required|image|mimes: jpeg,png,jpg|max:5048'
         ]);
 
         // Melakukan Aploud Image
@@ -116,14 +116,14 @@ class categoryController extends Controller
         //Melakukan Validasi
         $this->validate($request, [
             'name' => 'required|max:255',
-            'image' => 'required|image|mimes: jpeg,png,jpg|max:50048'
+            'image' => 'image|mimes: jpeg,png,jpg|max:5048'
         ]);
 
         //get data by id
         $category = Category::find($id);
         //jika image kosong
-        if ($request->image == '') {
-            $category::update([
+        if ($request->file('image') == '') {
+            $category->update([
                 'name' => $request->name,
                 'slug' => Str::slug($request->name)
             ]);
@@ -135,7 +135,7 @@ class categoryController extends Controller
             
             // Upload image baru
             $image = $request->file('image');
-            $image->storeAs('public/category/   ', $image->hashName());
+            $image->storeAs('public/category/', $image->hashName());
 
             // Update data
             $category->update([
