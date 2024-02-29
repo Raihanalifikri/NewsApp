@@ -7,5 +7,9 @@
                 Welcome {{ Auth::user()->name }}
             </h1>
         </div>
+        <form action="{{ route('logout') }}" method="post">
+            @csrf
+            <button class="btn btn-danger">Logout</button>
+        </form>
     </div>
 @endsection
