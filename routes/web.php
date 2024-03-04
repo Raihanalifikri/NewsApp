@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Category;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\categoryController;
@@ -22,10 +23,25 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Handle redirect register to login
+// Route::match(['get','post'], '/register', function(){
+//     return redirect('/login');
+// });
 
-// Route for News using Resource
-Route::resource('news', NewsController::class);
 
-// Route for Category Using resource
-Route::resource('category', categoryController::class);
+
+
+
+// Route middleware
+Route::middleware('auth')->group(function () {
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+    // Route for admin
+    Route::middleware(['auth', 'admin'])->group(function () {
+        // Route for News using Resource
+        Route::resource('news', NewsController::class);
+
+        // Route for Category Using resource
+        Route::resource('category', categoryController::class)->middleware('auth ');
+    });
+});

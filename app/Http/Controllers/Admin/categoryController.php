@@ -156,6 +156,17 @@ class categoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        //get dadt by id
+        $category = Category::find($id);
+        
+        // Hapus image lama
+        // basename itu untuk mengambil nama file
+        Storage::disk('local')->delete('public/category/' .basename($category->image));
+        
+        // Hapus data
+        $category->delete();
+        
+        // Redirect
+        return redirect()->route('category.index');
     }
 }
