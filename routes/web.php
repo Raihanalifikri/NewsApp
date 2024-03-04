@@ -37,11 +37,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
     // Route for admin
-    Route::middleware(['auth', 'admin'])->group(function () {
+    Route::middleware('admin')->group(function () {
         // Route for News using Resource
         Route::resource('news', NewsController::class);
 
         // Route for Category Using resource
-        Route::resource('category', categoryController::class)->middleware('auth ');
+        Route::resource('category', categoryController::class);
     });
 });

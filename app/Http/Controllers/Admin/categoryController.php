@@ -21,7 +21,7 @@ class categoryController extends Controller
         $title = 'Category - Index';
 
         // Mengurutkan data berdasarkan data terbaru
-        $category = Category::latest()->get();
+        $category = Category::latest()->paginate(5);
         return view('home.category.index', compact(
             'category',
             'title'
@@ -167,6 +167,6 @@ class categoryController extends Controller
         $category->delete();
         
         // Redirect
-        return redirect()->route('category.index');
+        return redirect()->route('category.index'); 
     }
 }
