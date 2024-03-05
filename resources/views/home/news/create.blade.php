@@ -57,6 +57,13 @@
                                 console.error( error );
                         } );
         </script>
+
+       <div class="justify-content-end d-flex">
+        <button class="btn btn-primary" type="submit">
+            <i class="bi bi-plus"></i>
+            Create News
+        </button>
+       </div>
             </form>
         </div>
     </div>
