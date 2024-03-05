@@ -144,7 +144,8 @@ class categoryController extends Controller
                 'image' => $image->hashName()
             ]);
 
-            return redirect()->route('category.index');
+            return redirect()->route('category.index')
+            ->with('update', 'Category Berhasil Di update');
         } 
     }
 
@@ -167,6 +168,7 @@ class categoryController extends Controller
         $category->delete();
         
         // Redirect
-        return redirect()->route('category.index'); 
+        return redirect()->route('category.index')
+        ->with('delete', 'Category Berhasil Di hapus');
     }
 }

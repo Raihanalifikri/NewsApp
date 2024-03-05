@@ -184,7 +184,7 @@
 
                     <li>
                         <form action="{{ route('logout') }}" method="post">
-                          @csrf
+                            @csrf
                             <button type="submit" class="dropdown-item d-flex align-items-center"
                                 href="users-profile.html">
                                 <i class="bi bi-person"></i>

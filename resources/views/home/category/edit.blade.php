@@ -9,6 +9,12 @@
             <form action="{{ route('category.update', $category->id) }}" method="post" enctype="multipart/form-data">
             @csrf
             @method('PUT')
+
+            @if (session('update'))
+            <div class="alert alert-success">
+                {{ session('update') }}
+            </div>
+        @endif
             
             <div class="col-12">
                 <label for="inputName" name="name" class="form-label">Category Name</label>

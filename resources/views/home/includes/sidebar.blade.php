@@ -22,6 +22,13 @@
             </a>
         </li><!-- End Dashboard Nav -->
 
+        <li class="nav-item">
+            <a class="nav-link " href="{{ route('news.index') }}">
+                <i class="bi bi-basket2"></i>
+                <span>News</span>
+            </a>
+        </li><!-- End Dashboard Nav -->
+
 
         <li class="nav-item">
 

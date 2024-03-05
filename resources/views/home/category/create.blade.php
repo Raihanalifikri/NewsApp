@@ -4,6 +4,16 @@
         <div class="card p-4">
             <h3>Ini halaman create</h3>
 
+            @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
             {{-- Untuk Melakukan penambahan data --}}
             {{-- ENCTYPE = Melakukan Input karena ada upload berupa File --}}
             <form action="{{ route('category.store') }}" method="post" enctype="multipart/form-data">

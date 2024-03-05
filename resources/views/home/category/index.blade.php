@@ -10,6 +10,22 @@
                     Create Category
                 </a>
             </div>
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+            @if (session('delete'))
+                <div class="alert alert-dangerP">
+                    {{ session('delete') }}
+                </div>
+            @endif
+            @if (session('update'))
+            <div class="alert alert-success">
+                {{ session('update') }}
+            </div>
+        @endif
+
             <div class="container mt-4">
                 <div class="card">
                     <div class="card-body">
@@ -27,7 +43,6 @@
                             <tbody>
                                 {{-- Manampilkan Data dengan perulangan Foreach dari category model --}}
                                 @forelse ($category as $row)
-
                                     <tr>
                                         <td> {{ $loop->iteration }} </td>
                                         <td>{{ $row->name }}</td>
