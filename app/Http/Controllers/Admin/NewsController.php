@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\News;
 use App\Models\Category;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class NewsController extends Controller
 {
@@ -57,6 +59,24 @@ class NewsController extends Controller
             'category_id' => 'required'
 
         ]);
+
+        //aploud image
+        // hashName() berfungsi memberikan nama acak pada image
+
+        $image = $request->file('image');
+        $image->storeAs('public/news', $image->hashName());
+
+        // Create Data
+        News::create([
+            'category_id' => $request->category_id,
+            'title' => $request->title,
+            'slug' => Str::slug($request->title, '-'),
+            'image' => $image->hashName(),
+            'content' => $request->content
+        ]);
+
+        return redirect()->route('news.index');
+
     }
 
     /**

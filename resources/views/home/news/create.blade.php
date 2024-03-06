@@ -22,7 +22,7 @@
             {{-- Value = old untuk  --}}
             <div class="mb-3">
                 <label for="inputImage" name="image" class="form-label">News Image</label>
-                <input type="file" class="form-control" id="inputImage" name="Image" value="{{ old('title') }}">
+                <input type="file" class="form-control" id="inputImage" name="image" value="{{ old('image') }}">
             </div>
 
             <div class="mb-3">
