@@ -64,7 +64,8 @@ class NewsController extends Controller
             'content' => 'required',
             'category_id' => 'required'
 
-        ]);
+
+        ]); 
 
         //aploud image
         // hashName() berfungsi memberikan nama acak pada image
@@ -81,6 +82,7 @@ class NewsController extends Controller
             'content' => $request->content
         ]);
 
+
         return redirect()->route('news.index');
 
     }
@@ -93,7 +95,18 @@ class NewsController extends Controller
      */
     public function show($id)
     {
-        //
+
+        $title = 'News - Show';
+         // Get data by id
+        // findOrfail jika tidak ada tada maka akan tampil error 404
+        $news = News::findOrfail($id);
+
+        return view('home.news.show', compact(
+            'title',
+            'news'
+        ));
+
+       
     }
 
     /**
@@ -104,7 +117,16 @@ class NewsController extends Controller
      */
     public function edit($id)
     {
-        //
+        //Get data by id
+        $news = News::findOrfail($id);
+        $category = Category::all();
+        $title = 'News - Edit';
+
+        return view('home.news.edit', compact(
+            'title',
+            'news',
+            'category'
+        ));
     }
 
     /**

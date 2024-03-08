@@ -20,7 +20,7 @@
                 <i class="bi bi-basket2"></i>
                 <span>Category</span>
             </a>
-        </li><!-- End Dashboard Nav -->
+        </li><!-- End Dashboard Nav --> 
 
         <li class="nav-item">
             <a class="nav-link " href="{{ route('news.index') }}">

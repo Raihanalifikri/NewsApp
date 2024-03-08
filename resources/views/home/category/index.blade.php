@@ -10,6 +10,40 @@
                     Create Category
                 </a>
             </div>
+            <div class="card p-4">
+                <div class="row">
+                    @forelse ($category as $row)
+                        <div class="col-5">
+                            <div class="card" style="width: 18rem;">
+                                <img src="{{ $row->image }}" class="card-img-top" alt="..." width="100px" height="200px">
+                                <div class="card-body ">
+                                    <h5 class="card-title">{{ $row->name }}</h5>
+                                    <div class="d-flex gap-3">
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#basicModal{{ $row->id }}">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+        
+                                        <a href="{{ route('category.edit', $row->id) }}" class="btn btn-warning">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <form action="{{ route('category.destroy', $row->id) }}" method="post">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+        
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                    @endforelse
+        
+                </div>
+            </div>
             @if (session('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}
@@ -26,62 +60,6 @@
             </div>
         @endif
 
-            <div class="container mt-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Data Table</h5>
-                        <table class="table datatable">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Name</th>
-                                    <th>Slug</th>
-                                    <th>Image</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{-- Manampilkan Data dengan perulangan Foreach dari category model --}}
-                                @forelse ($category as $row)
-                                    <tr>
-                                        <td> {{ $loop->iteration }} </td>
-                                        <td>{{ $row->name }}</td>
-                                        <td>{{ $row->slug }}</td>
-                                        <td><img src="{{ $row->image }}" alt="INI GAMBAR" width="100px"></td>
-                                        <td class="justify-content-evenly">
-                                            <!-- Show Using Modal With id -->
-                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                data-bs-target="#basicModal{{ $row->id }}">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            @include('home.category.include.modal-show')
-                                            <!-- End Show-->
-
-                                            {{-- Button edit with Route category.edit {{ row->id }} --}}
-                                            <a href="{{ route('category.edit', $row->id) }}" class="btn btn-warning">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </a>
-
-                                            <form action="{{ route('category.destroy', $row->id) }}" method="post">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            </form>
-
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <p>Belum ada data</p>
-                                @endforelse
-                            </tbody>
-                        </table>
-                        {{-- Paginate --}}
-                        {{ $category->links('pagination::bootstrap-5') }}
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 @endsection
