@@ -82,7 +82,7 @@ class NewsController extends Controller
         ]);
 
 
-        return redirect()->route('news.index');
+        return redirect()->route('news.index')->with('success', 'Kamu berhasil menambah News baru 👍');
 
     }
 
@@ -189,6 +189,15 @@ class NewsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        //get data by id
+        $news = News::findOrFail($id);
+
+        // Delete Image
+        Storage::disk('local')->delete('public/news/' . basename($news->image));
+
+        // Delete data
+        $news->delete();
+        return redirect()->route('news.index')->with('delete', 'Data berhasil dihapus');
+
     }
 }

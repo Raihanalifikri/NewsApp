@@ -69,6 +69,7 @@
             update News
         </button>
        </div>
+       
             </form>
         </div>
     </div>
