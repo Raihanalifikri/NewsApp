@@ -30,9 +30,9 @@
                 <div class="col-10">
                   <select name="category_id" class="form-select" aria-label="Default select example">
                     <option selected value="{{ $news->category->id }}">{{ $news->category->name }}</option>
-                    <option >==== Choose Category ====</option>
-                    @foreach ($category as $news)
-                    <option value="{{ $news->id }}">{{ $news->name }}</option>
+                    <option>==== Choose Category ====</option>
+                    @foreach ($category as $row)
+                    <option value="{{ $row->id }}">{{ $row->name }}</option>
                     @endforeach
                     
                   </select>
@@ -66,11 +66,11 @@
        <div class="justify-content-end d-flex">
         <button class="btn btn-primary" type="submit">
             <i class="bi bi-plus"></i>
-            Create News
+            update News
         </button>
        </div>
             </form>
         </div>
     </div>
 
-@endsection
+@endsection 

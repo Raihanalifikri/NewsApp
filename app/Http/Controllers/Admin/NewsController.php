@@ -7,6 +7,7 @@ use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class NewsController extends Controller
 {
@@ -63,8 +64,6 @@ class NewsController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg|max:5120',
             'content' => 'required',
             'category_id' => 'required'
-
-
         ]); 
 
         //aploud image
@@ -138,8 +137,49 @@ class NewsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
-    }
+        //Validate
+        $this->validate($request,[
+            'title' => 'required|max:255',
+            'category_id' => 'required',
+            'content' => 'required',
+            'image' => 'image|mimes:jpeg,png,jpg|max:5120'
+        ]);
+
+        // Get data by id
+        $news = News::findOrFail($id);
+        
+        //cek jika tidak ada image yang di Aploud
+        // Check if no image uploaded
+        if ($request->file('image') == ""){
+              //Update date
+              $news->update([
+                'title' => $request->title,
+                'slug' => Str::slug($request->title),
+                'category_id' => $request->category_id,
+                'content' => $request->content
+              ]);
+        } else {
+            // Hapus Old Image
+            Storage::disk('local')->delete('public/news/' . basename($news->image));
+
+            // Apload new Image
+            $image = $request->file('image');
+            $image->storeAs('public/news', $image->hashName());
+
+            // Update data
+            $news->update([
+                'title' => $request->title,
+                'slug' => Str::slug($request->title),
+                'category_id' => $request->category_id,
+                'image' => $image->hashName(),
+                'content' => $request->content,
+
+            ]);
+        }
+
+        return redirect()->route('news.index');
+    } 
+        
 
     /**
      * Remove the specified resource from storage.
