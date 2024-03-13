@@ -34,6 +34,11 @@ Auth::routes();
 // Route middleware
 Route::middleware('auth')->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/profile', [App\Http\Controllers\Profile\ProfileController::class,'index'])->name('profile.index');
+    Route::get('/change-password', [\App\Http\Controllers\Profile\ProfileController::class, 'changePassword'])->name('profile.change-password');
+    Route::put('/update-password', [\App\Http\Controllers\Profile\ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
+    
+    // ('/update-password', [\App\Http\Controllers\Profile\ProfileController::class, 'updatePassword'])->name('profile.update-password');
 
     // Route for admin
     Route::middleware('admin')->group(function () {
@@ -41,6 +46,6 @@ Route::middleware('auth')->group(function () {
         Route::resource('news', NewsController::class);
 
         // Route for Category Using resource
-        Route::resource('category', categoryController::class);
+        Route::resource('category', categoryController::class)->except('show');
     });
 });
