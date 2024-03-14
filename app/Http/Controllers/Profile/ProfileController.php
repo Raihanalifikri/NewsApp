@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Profile;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -65,4 +66,58 @@ class ProfileController extends Controller
         }
 
     }
+
+    public function allUser(){
+         $title = 'All User';
+
+         $user = User::where('role', 'user')->get();
+
+         return view('home.user.index', compact(
+            'title',
+            'user'
+         ));
+    }
+
+    public function resetPassword($id){
+        // get user by id
+        $user = User::find($id);
+        $user->password = Hash::make('123456');
+        $user->save();
+
+        // return
+        return redirect()->back()->with('success', 'Password has been reset');
+    }
+
+    public function createProfile(){
+        $title = 'Create Profile';
+
+        return view('home.profile.create', compact(
+            'title'
+        ));
+    }
+
+    public function storeProfile(Request $request){
+        //Validate
+        $this->validate($request, [
+            'first_name' => 'required',
+            'image' => 'image|mimes:jpeg,jpg,png|max:2048'
+        ]);
+
+        // Sote image
+        $image = $request->file('image');
+        $image->storeAs('public/profile/', $image->getClientOriginalName());
+
+        // Get user Login
+        $user = auth()->user();
+
+        // Create data Profile
+        $user->profile()->create([
+            'first_name' => $request->first_name,
+            'image' => $image->getClientOriginalName()
+        ]);
+
+        return redirect()->route('profile.index')->with('success', 'Profile hes been created');
+    }
+
+
 }

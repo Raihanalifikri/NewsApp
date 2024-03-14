@@ -26,6 +26,12 @@
                     <span>News</span>
                 </a>
             </li><!-- End Dashboard Nav -->
+            <li class="nav-item">
+                <a class="nav-link " href="{{ route('allUser') }}">
+                    <i class="bi bi-grid"></i>
+                    <span>User</span>
+                </a>
+            </li><!-- End Dashboard Nav -->
     
         @else
         @endif

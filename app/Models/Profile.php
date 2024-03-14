@@ -12,7 +12,7 @@ class Profile extends Model
 
     protected $fillable = [
      'user_id',
-     'frist_name',
+     'first_name',
      'image'
     ];
 
@@ -24,7 +24,7 @@ class Profile extends Model
     // Accessor image profile
     public function image() : Attribute{
         return Attribute::make(
-            get: fn($value) => asset('/storage/profile' . $value)
+            get: fn($value) => asset('/storage/profile/' . $value)
         );
     }
 }
