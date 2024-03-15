@@ -80,15 +80,17 @@
                     </div>
 
                     <div class="col-md-3">
-                       
-                        <div class="post-entry-1 border-bottom">
-                            <div class="post-meta"><span class="date">Culture</span> <span class="mx-1">&bullet;</span>
-                                <span>Jul 5th '22</span>
+                       @foreach ($categoryNews as $row)
+                           {{ $row }}
+                       @endforeach
+                            <div class="post-entry-1 border-bottom">
+                                <div class="post-meta"><span class="date">Culture</span> <span class="mx-1">&bullet;</span>
+                                    <span>Jul 5th '22</span>
+                                </div>
+                                <h2 class="mb-2"><a href="single-post.html">10 Life-Changing Hacks Every Working Mom Should
+                                        Know</a></h2>
+                                <span class="author mb-3 d-block">Jenny Wilson</span>
                             </div>
-                            <h2 class="mb-2"><a href="single-post.html">10 Life-Changing Hacks Every Working Mom Should
-                                    Know</a></h2>
-                            <span class="author mb-3 d-block">Jenny Wilson</span>
-                        </div>
                     </div>
                 </div>
             </div>
