@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Profile;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -117,6 +118,53 @@ class ProfileController extends Controller
         ]);
 
         return redirect()->route('profile.index')->with('success', 'Profile hes been created');
+    }
+
+    public function editProfile(){
+        $title = 'Edit Profile';
+
+        // Get data user login
+        $user = auth()->user();
+        
+        // return
+        return view('home.profile.edit', compact(   
+            'title',
+            'user'
+        ));
+    }
+
+    public function updateProfile(Request $request){
+        // Validate
+        $this->validate($request, [
+            'first_name' => 'required',
+            'image' => 'image|mimes:jpeg,png,jpg|max:2048'
+        ]);
+
+        // Get user login
+        $user = auth()->user();
+
+        // Cek kondisi
+        if ($request->file('image') == '') {
+            $user->profil->update([
+                'first_name' => $request->first_name
+            ]);
+            return redirect()->route('profile.index')->with('success', 'First Name Has been Updated');
+        } else {
+        // delete Image
+            Storage::delete('public/profile/' . basename($user->profile->image));
+
+            // Store Image
+            $image = $request->file('image');
+            $image->storeAs('public/profile', $image->getClientOriginalName());
+
+            // Update data
+            $user->profile->update([
+            'first_name' => $request->first_name,
+            'image' => $image->getClientOriginalName()
+            ]);
+            
+            return redirect()->route('profile.index')->with('success', 'First Name Has been Updated');
+        }
     }
 
 
