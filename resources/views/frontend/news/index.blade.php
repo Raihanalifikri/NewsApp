@@ -1,5 +1,37 @@
 @extends('frontend.parent')
 @section('content')
+
+     <section id="hero-slider" class="hero-slider">
+      <div class="container-md" data-aos="fade-in">
+        <div class="row">
+          <div class="col-12">
+            <div class="swiper sliderFeaturedPosts">
+              <div class="swiper-wrapper">
+                @foreach ($sliderNews as $row)
+                <div class="swiper-slide">
+                    <a href="single-post.html" class="img-bg d-flex align-items-end" style="background-image: url('{{ $row->image }}');">
+                      <div class="img-bg-inner">
+                        <h2>{{ $row->title }}</h2>
+                        <p>{{ Str::limit(strip_tags($row->content, 70)) }}</p>
+                      </div>
+                    </a>
+                  </div>
+                @endforeach
+              </div>
+              <div class="custom-swiper-button-next">
+                <span class="bi-chevron-right"></span>
+              </div>
+              <div class="custom-swiper-button-prev">
+                <span class="bi-chevron-left"></span>
+              </div>
+
+              <div class="swiper-pagination"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- End Hero Slider Section -->
+
     @foreach ($category as $row)
         <section class="category-section">
             <div class="container" data-aos="fade-up">
@@ -12,46 +44,52 @@
                 <div class="row">
                     <div class="col-md-9">
 
+                        @php
+                        $latestNews = \App\Models\News::where('category_id', $row->id)->latest()->take(1)->get();
+                        @endphp
+
+                        @foreach ($latestNews as $news)
+
+                         {{-- Get the fisrt news from the category --}}
+                        {{-- The function of take(1) is fot take a one news --}}
                         <div class="d-lg-flex post-entry-2">
                             <a href="single-post.html" class="me-4 thumbnail mb-4 mb-lg-0 d-inline-block">
-                                <img src="{{ asset('zen/assets/img/post-landscape-') }}6.jpg" alt=""
+                                <img src="{{ $news->image }}" alt=""
                                     class="img-fluid">
                             </a>
                             <div>
-                                <div class="post-meta"><span class="date">Culture</span> <span
+                                <div class="post-meta"><span class="date">{{ $row->name }}</span> <span
                                         class="mx-1">&bullet;</span>
-                                    <span>Jul 5th '22</span>
+                                    <span>{{ $news->created_at->diffForHumans() }}</span>
                                 </div>
-                                <h3><a href="single-post.html">What is the son of Football Coach John Gruden, Deuce Gruden
-                                        doing
-                                        Now?</a></h3>
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio placeat
-                                    exercitationem
-                                    magni voluptates dolore. Tenetur fugiat voluptates quas, nobis error deserunt aliquam
-                                    temporibus sapiente, laudantium dolorum itaque libero eos deleniti?</p>
+                                <h3><a href="#">{{ $news->title }}</a></h3>
+                                <p>{{ Str::limit(strip_tags($news->content, 70)) }}</p>
                                 <div class="d-flex align-items-center author">
-                                    <div class="photo"><img src="{{ asset('zen/assets/img/person-2.jpg"') }} alt=""
+                                    <div class="photo"><img src="{{ asset('forntEdn/assets/img/person-2.jpg"') }}" alt=""
                                             class="img-fluid"></div>
                                     <div class="name">
-                                        <h3 class="m-0 p-0">Wade Warren</h3>
+                                        <h3 class="m-0 p-0">Admin</h3>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        @endforeach
+
+                       
+                       
+
 
                         <div class="row">
+                            @foreach ($row->news->random(1) as $news)
                             <div class="col-lg-4">
                                 <div class="post-entry-1 border-bottom">
-                                    <a href="single-post.html"><img src="{{ asset('zen/assets/img/post-landscape-1.jp') }}g"
+                                    <a href="#"><img src="{{ $news->image }}"
                                             alt="" class="img-fluid"></a>
-                                    <div class="post-meta"><span class="date">Culture</span> <span
-                                            class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                                    <h2 class="mb-2"><a href="single-post.html">11 Work From Home Part-Time Jobs You Can
-                                            Do
-                                            Now</a></h2>
-                                    <span class="author mb-3 d-block">Jenny Wilson</span>
-                                    <p class="mb-4 d-block">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero
-                                        temporibus repudiandae, inventore pariatur numquam cumque possimus</p>
+                                    <div class="post-meta"><span class="date">{{ $row->title }}</span> <span
+                                            class="mx-1">&bullet;</span> <span>{{ $news->created_at->diffForHumans() }}</span></div>
+                                    <h2 class="mb-2"><a href="single-post.html"></a></h2>
+                                    <span class="author mb-3 d-block">Admin</span>
+                                    <p class="mb-4 d-block">{{ Str::limit(strip_tags($news->content, 30)) }}</p>
                                 </div>
 
                                 <div class="post-entry-1">
@@ -63,34 +101,43 @@
                                     <span class="author mb-3 d-block">Jenny Wilson</span>
                                 </div>
                             </div>
-                            <div class="col-lg-8">
-                                <div class="post-entry-1">
-                                    <a href="single-post.html"><img src="{{ asset('zen/assets/img/post-landscape-2.jp') }}g"
-                                            alt="" class="img-fluid"></a>
-                                    <div class="post-meta"><span class="date">Culture</span> <span
-                                            class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                                    <h2 class="mb-2"><a href="#">How to Avoid Distraction and Stay Focused
-                                            During Video Calls?</a></h2>
-                                    <span class="author mb-3 d-block">Jenny Wilson</span>
-                                    <p class="mb-4 d-block">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero
-                                        temporibus repudiandae, inventore pariatur numquam cumque possimus</p>
-                                </div>
+                            @endforeach
+                           
+                           @foreach ($row->news->random(1) as $row)
+                           <div class="col-lg-8">
+                            <div class="post-entry-1">
+                                <a href="#"><img src="{{ $row->image }}"
+                                        alt="" class="img-fluid"></a>
+                                <div class="post-meta"><span class="date">{{ $row->name }}</span> <span
+                                        class="mx-1">&bullet;</span> <span>{{ $news->created_at->diffForHumans() }}</span></div>
+                                <h2 class="mb-2"><a href="#">{{ $row->title }}</a></h2>
+                                <span class="author mb-3 d-block">Admin</span>
+                                <p class="mb-4 d-block">{{ Str::limit(strip_tags($news->content, 70)) }}</p>
                             </div>
+                        </div>
+                           @endforeach
                         </div>
                     </div>
 
                     <div class="col-md-3">
-                       @foreach ($categoryNews as $row)
-                           {{ $row }}
-                       @endforeach
+
+                        @php
+                        $sideNews = \App\Models\News::where('category_id', $row->id)->latest()->take(10)->get();
+                        @endphp
+
+                       @foreach ($sideNews  as $news)
                             <div class="post-entry-1 border-bottom">
-                                <div class="post-meta"><span class="date">Culture</span> <span class="mx-1">&bullet;</span>
-                                    <span>Jul 5th '22</span>
+                                <div class="post-meta"><span class="date">{{ $row->name }}</span> <span class="mx-1">&bullet;</span>
+                                    <span>{{ $news->created_at->diffForHumans() }}</span>
                                 </div>
-                                <h2 class="mb-2"><a href="single-post.html">10 Life-Changing Hacks Every Working Mom Should
-                                        Know</a></h2>
-                                <span class="author mb-3 d-block">Jenny Wilson</span>
+                                <h2 class="mb-2"><a href="#">
+                                    {{-- limit Character--}}
+                                    {{ Str::limit($news->title, 30) }}</a></h2>
+                                <span class="author mb-3 d-block">Admin</span>
+                                <p>{{ Str::limit(strip_tags($news->content, 70)) }}</p>
                             </div>
+                       @endforeach
+                           
                     </div>
                 </div>
             </div>
