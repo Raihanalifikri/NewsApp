@@ -17,6 +17,9 @@ use App\Http\Controllers\Admin\categoryController;
 */
 
 Route::get('/', [\App\Http\Controllers\Forntend\FrontendController::class, 'index']);
+Route::get('/detail/news/{slug}', [\App\Http\Controllers\Forntend\FrontendController::class, 'detailNews'])->name('detailNews');
+Route::get('/detail/category/{slug}', [\App\Http\Controllers\Forntend\FrontendController::class, 'detailCategory'])->name('detailCategory');
+
 
 Auth::routes();
 

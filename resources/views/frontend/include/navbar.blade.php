@@ -1,7 +1,7 @@
 <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
-      <a href="index.html" class="logo d-flex align-items-center">
+      <a href="/" class="logo d-flex align-items-center">
         <!-- Uncomment the line below if you also wish to use an image logo -->
         <!-- <img src="assets/img/logo.png" alt=""> -->
         <h1>ZenBlog</h1>
@@ -10,10 +10,12 @@
       <nav id="navbar" class="navbar">
         @foreach ($category as $row)
         <ul>
-          <li><a href="#">{{ $row->name }}</a></li>
+          <li><a href="{{ route('detailCategory', $row->slug) }}">{{ $row->name }}</a></li>
         </ul>
         @endforeach
       </nav><!-- .navbar -->
+
+      
 
       <div class="position-relative">
         <a href="#" class="mx-2"><span class="bi-facebook"></span></a>

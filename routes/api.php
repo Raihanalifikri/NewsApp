@@ -17,3 +17,27 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::group(['middleware' => ['auth:sanctum']], function() {
+    Route::post('/logout', [\App\Http\Controllers\API\AuthController::class, 'logout']);
+});
+
+Route::get('/allUsers', [App\Http\Controllers\API\AuthController::class, 'allUsers']);
+
+Route::post('/login', [\App\Http\Controllers\API\AuthController::class, 'login']);
+Route::post('/register', [\App\Http\Controllers\API\AuthController::class, 'register']);
+
+// Get data News
+Route::get('/allNews', [\App\Http\Controllers\API\NewsController::class, 'index']);
+
+// Get data by id
+Route::get('/news/{id}', [\App\Http\Controllers\Api\NewsController::class, 'show']);
+
+// Get data category
+Route::get('/category', [\App\Http\Controllers\Api\CategoryController::class, 'index']);
+
+// Get data by id
+Route::get('/category/{id}', [\App\Http\Controllers\Api\CategoryController::class, 'show']);
+
+// Get data Carousel
+Route::get('/carousel', [\App\Http\Controllers\Api\FrontEndController::class, 'index']);
