@@ -12,8 +12,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
-    {
+    public function login(Request $request){
         try {
             // validate
             $this->validate($request, [
@@ -106,5 +105,48 @@ class AuthController extends Controller
     public function allUsers(){
         $user = User::where('role', 'user')->get();
         return ResponseFormatter::success($user, 'Data user berhasil diambil', 200);
+    }
+
+    public function updatePassword(Request $request){
+        try {
+            //Validate
+            $this->validate($request, [
+                'old_password' => 'required',
+                'new_password' => 'required|string|min:6',
+                'confirm_password' => 'required|string|min:6'
+            ]);
+
+            // Get data user
+            $user = Auth::user();
+
+            // Cek password
+            if (!Hash::check($request->old_password, $user->password)) {
+                return ResponseFormatter::error([
+                    'message' => 'Password lama tidak sesuai'
+                ], 'Authentication Failed', 401);
+            }
+
+            // Cek password baru dan confirm password baru
+            if ($request->new_password != $request->confirm_password) {
+                return ResponseFormatter::error([
+                    'message' => 'Password tidak sesuai'
+                ], 'Authentication Failed', 401);
+            }
+
+            // update password
+            $user->password = Hash::make($request->new_password);
+            $user->save();
+
+            return ResponseFormatter::success([
+                'message' => 'Password Berhasil diUbah'
+            ], 'Authentication', 200);
+
+
+        } catch (\Exception $error) {
+            return ResponseFormatter::error([
+                'message' => 'Something went wrong',
+                'error' => $error
+            ], 'Authentication Failed', 500);
+        }
     }
 }
