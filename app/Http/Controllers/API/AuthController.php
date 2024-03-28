@@ -9,10 +9,12 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         try {
             // validate
             $this->validate($request, [
@@ -52,7 +54,8 @@ class AuthController extends Controller
         }
     }
 
-    public function register(Request $request){
+    public function register(Request $request)
+    {
         try {
             // validate
             $this->validate($request, [
@@ -94,20 +97,22 @@ class AuthController extends Controller
         }
     }
 
-    public function logout(Request $request){
+    public function logout(Request $request)
+    {
         $token = $request->user()->currentAccessToken()->delete();
         return ResponseFormatter::success([
             $token = 'Token revoked'
         ], 'Token revoked', 200);
-        
     }
 
-    public function allUsers(){
+    public function allUsers()
+    {
         $user = User::where('role', 'user')->get();
         return ResponseFormatter::success($user, 'Data user berhasil diambil', 200);
     }
 
-    public function updatePassword(Request $request){
+    public function updatePassword(Request $request)
+    {
         try {
             //Validate
             $this->validate($request, [
@@ -140,13 +145,115 @@ class AuthController extends Controller
             return ResponseFormatter::success([
                 'message' => 'Password Berhasil diUbah'
             ], 'Authentication', 200);
-
-
         } catch (\Exception $error) {
             return ResponseFormatter::error([
                 'message' => 'Something went wrong',
                 'error' => $error
             ], 'Authentication Failed', 500);
+        }
+    }
+
+    public function storeProfile(Request $request)
+    {
+        try {
+            //validate
+            $this->validate($request, [
+                'first_name' => 'required',
+                'image' => 'required|image|max:2048|mimes:png,jpg,jpeg'
+            ]);
+
+            // get data user
+            $user = auth()->user();
+
+            //uploud image
+            $image = $request->file('image');
+            $image->storeAs('public/profile', $image->hashName());
+
+            //create profile
+            $user->profile()->create([
+                'first_name' => $request->first_name,
+                'image' => $image->hashName()
+            ]);
+
+            //Get data profile
+            $profile = $user->profile;
+
+            return ResponseFormatter::success(
+                $profile,
+                'Profile berhasil di update'
+            );
+        } catch (\Exception $error) {
+            return ResponseFormatter::error([
+                'message' => 'something Went Wrong',
+                'error' => $error
+            ], 'Authentication', 500);
+        }
+    }
+
+    public function updateProfile(Request $request)
+    {
+        try {
+            // Validate
+            $this->validate($request, [
+                'first_name' => '',
+                'image' => 'image|mimes:jpeg,png,jpg|max:2048'
+            ]);
+
+            // Get user login
+            $user = auth()->user();
+
+            // Cek kondisi
+            if (!$user->profile) {
+                return ResponseFormatter::success([
+                    'message' => 'Profile Not Found, Please Create Your profile first'
+                ], 'Authentication', 404);
+            }
+
+            // Update profile
+            if ($request->file('image') == '') {
+                $user->profile->update([
+                    'first_name' => $request->first_name
+                ]);
+                return ResponseFormatter::success([
+                    'message' => 'First Name Berhasil di ubah'
+                ], 'Authentication', 200);
+            } else {
+
+                if ($request->first_name == '') {
+                    Storage::delete('public/profile/' . basename($user->profile->image));
+
+                    // Store Image
+                    $image = $request->file('image');
+                    $image->storeAs('public/profile', $image->getClientOriginalName());
+                    $user->profile->update([
+                        $image = $request->file('image')
+                    ]);
+                } else {
+                    // delete Image
+                    Storage::delete('public/profile/' . basename($user->profile->image));
+
+                    // Store Image
+                    $image = $request->file('image');
+                    $image->storeAs('public/profile', $image->getClientOriginalName());
+
+                    // Update data
+                    $user->profile->update([
+                        'first_name' => $request->first_name,
+                        'image' => $image->getClientOriginalName()
+                    ]);
+                }
+            }
+
+
+
+            return ResponseFormatter::success([
+                'message' => ' First Name & Gambar Berhasil di ubah'
+            ], 'Authentication', 200);
+        } catch (\Exception $error) {
+            return ResponseFormatter::error([
+                'message' => 'Something Went Wrong',
+                'error' => $error
+            ], 'Authentication', 500);
         }
     }
 }
